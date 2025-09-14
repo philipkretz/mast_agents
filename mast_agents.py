@@ -53,7 +53,7 @@ async def call_llm(backend, client, model_name, prompt, timeout=60):
                         continue
                 return out
     except Exception as e:
-        return f"⚠️ LLM call failed: {str(e)}"
+        return f"LLM call failed: {str(e)}"
 
 # ---------------------------------------------------------------------
 # File Management Utilities
@@ -102,9 +102,9 @@ def create_files_from_blocks(code_blocks, base_path="project"):
             with open(file_path, 'w', encoding='utf-8') as f:
                 f.write(block['content'])
             created_files.append(str(file_path))
-            print(f"✅ Created: {file_path}")
+            print(f"Created: {file_path}")
         except Exception as e:
-            print(f"❌ Failed to create {file_path}: {e}")
+            print(f"Failed to create {file_path}: {e}")
     
     return created_files
 
@@ -182,7 +182,7 @@ class Agent:
         self.collaboration_history = []
 
     async def run(self, prompt, context_from_others=None):
-        print(f"\n🤖 {self.name} is working on: {self.role}")
+        print(f"\n{self.name} is working on: {self.role}")
         
         # Get messages from other agents
         messages = []
@@ -197,13 +197,13 @@ class Agent:
         # Extract and create files from the result
         code_blocks = extract_code_blocks(self.result)
         if code_blocks:
-            print(f"📁 {self.name} creating {len(code_blocks)} files...")
+            print(f"{self.name} creating {len(code_blocks)} files...")
             self.created_files = create_files_from_blocks(code_blocks)
         
         # Send feedback to other agents after completing work
         await self._provide_feedback_to_peers()
         
-        print(f"✅ {self.name} finished.\n")
+        print(f"{self.name} finished.\n")
         return self.result
 
     def _build_enhanced_prompt(self, base_prompt, context, messages):
@@ -459,12 +459,12 @@ class SprintCoordinator:
 
     async def run_sprint(self, goal):
         self.sprint_count += 1
-        print(f"\n🏃‍♂️ Starting Sprint #{self.sprint_count} with Enhanced Communication")
-        print("💬 Agents will collaborate and provide feedback to each other")
+        print(f"\nStarting Sprint #{self.sprint_count} with Enhanced Communication")
+        print("Agents will collaborate and provide feedback to each other")
         
         # Analyze existing files before starting (if not first sprint)
         if self.sprint_count > 1:
-            print("\n🔍 Analyzing existing project files...")
+            print("\nAnalyzing existing project files...")
             file_analysis = analyze_project_files()
             
             analyst = next((a for a in self.agents if isinstance(a, AnalystAgent)), None)
@@ -483,12 +483,12 @@ class SprintCoordinator:
         ux_out = await ux.run(goal)
         
         # Phase 2: UI Design (with feedback from UX and input from technical team)
-        print("\n🎨 Phase 2: UI Design")
+        print("\nPhase 2: UI Design")
         ui = next(a for a in self.agents if isinstance(a, UIDesignerAgent))
         ui_out = await ui.run(ux_out)
         
         # Phase 3: Development (with cross-team collaboration)
-        print("\n⚙️ Phase 3: Development & Deployment")
+        print("\n⚙Phase 3: Development & Deployment")
         backend = next(a for a in self.agents if isinstance(a, BackendAgent))
         frontend = next(a for a in self.agents if isinstance(a, FrontendAgent))
         devops = next(a for a in self.agents if isinstance(a, DevOpsAgent))
@@ -499,10 +499,10 @@ class SprintCoordinator:
         devops_out = await devops.run(arch_out)
         
         # Phase 4: Collaboration Review Round
-        print("\n🔄 Phase 4: Collaboration Review")
+        print("\nPhase 4: Collaboration Review")
         await self._run_collaboration_round()
 
-        print(f"\n📌 Sprint #{self.sprint_count} Results:")
+        print(f"\nSprint #{self.sprint_count} Results:")
         print("\n--- Product Owner Tasks ---\n", po_out)
         print("\n--- Architecture ---\n", arch_out)
         print("\n--- UX Flows ---\n", ux_out)
@@ -517,17 +517,17 @@ class SprintCoordinator:
             all_files.extend(agent.created_files)
         
         if all_files:
-            print(f"\n📁 Files created in Sprint #{self.sprint_count}:")
+            print(f"\nFiles created in Sprint #{self.sprint_count}:")
             for file_path in all_files:
                 print(f"  - {file_path}")
         
         # Show communication summary
-        print(f"\n💬 Communication Summary:")
+        print(f"\nCommunication Summary:")
         print(f"  Total messages exchanged: {len(self.communication_hub.messages)}")
         
     async def _run_collaboration_round(self):
         """Run a round of cross-agent collaboration and improvements"""
-        print("🤝 Agents reviewing each other's work...")
+        print("Agents reviewing each other's work...")
         
         # Get all current outputs for context
         recent_outputs = self.communication_hub.get_recent_outputs()
@@ -554,7 +554,7 @@ class SprintCoordinator:
             await self.run_sprint(goal)
             
             if i < len(goals):
-                print(f"\n⏳ Sprint #{i} completed. Files will be analyzed before next sprint...")
+                print(f"\nSprint #{i} completed. Files will be analyzed before next sprint...")
                 input("Press Enter to continue to next sprint...")
 
 # ---------------------------------------------------------------------
@@ -615,10 +615,10 @@ async def main():
     coordinator = SprintCoordinator(agents)
     
     if mode == "1":
-        goal = input("\n🎯 Enter Sprint Goal: ")
+        goal = input("\nEnter Sprint Goal: ")
         await coordinator.run_sprint(goal)
     else:
-        print("\n📝 Enter sprint goals (empty line to finish):")
+        print("\nEnter sprint goals (empty line to finish):")
         goals = []
         while True:
             goal = input(f"Sprint {len(goals) + 1}: ").strip()
