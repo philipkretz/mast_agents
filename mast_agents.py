@@ -541,7 +541,7 @@ class SprintCoordinator:
                 messages = self.communication_hub.get_messages_for_agent(agent.name)
                 
                 if messages:
-                    print(f"🔧 {agent.name} incorporating feedback...")
+                    print(f"{agent.name} incorporating feedback...")
                     # Could run improvement iterations here if needed
                     # This is where agents could refine their work based on peer input
 
